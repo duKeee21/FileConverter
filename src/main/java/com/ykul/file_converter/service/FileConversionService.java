@@ -1,7 +1,7 @@
 package com.ykul.file_converter.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ykul.file_converter.converter.ConverterService;
+import com.ykul.file_converter.converter.FileType;
 import com.ykul.file_converter.dto.ConversionRequest;
 import com.ykul.file_converter.inbox.InboxEvent;
 import com.ykul.file_converter.inbox.InboxEventRepository;
@@ -46,9 +46,10 @@ public class FileConversionService {
 
         try {
             String ext = extractExtension(request.getFilePath());
+            FileType fileType = FileType.fromExtension(ext);
             List<String> outputPaths = new ArrayList<>();
 
-            if ("ZIP".equalsIgnoreCase(ext)) {
+            if (fileType == FileType.ZIP) {
                 try (InputStream in = minio.downloadFile(request.getFilePath());
                      ZipInputStream zis = new ZipInputStream(in)) {
 

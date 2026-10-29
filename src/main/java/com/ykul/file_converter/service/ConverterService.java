@@ -1,6 +1,9 @@
-package com.ykul.file_converter.converter;
+package com.ykul.file_converter.service;
 
+import com.ykul.file_converter.converter.Converter;
+import com.ykul.file_converter.converter.FileType;
 import org.springframework.stereotype.Service;
+
 import java.io.InputStream;
 import java.util.List;
 
@@ -13,12 +16,14 @@ public class ConverterService {
         this.converters = converters;
     }
 
-    public byte[] convert(String fileType, InputStream inputStream) throws Exception {
+    public byte[] convert(String fileTypeString, InputStream inputStream) throws Exception {
+        FileType fileType = FileType.fromExtension(fileTypeString);
+
         return converters.stream()
                 .filter(c -> c.supports(fileType))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(
-                        "Неподдерживаемый тип файла: " + fileType))
+                        "Неподдерживаемый тип файла: " + fileTypeString))
                 .convert(inputStream);
     }
 }

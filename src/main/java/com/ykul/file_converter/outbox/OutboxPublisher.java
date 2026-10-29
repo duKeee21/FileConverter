@@ -1,5 +1,6 @@
 package com.ykul.file_converter.outbox;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -19,7 +20,8 @@ public class OutboxPublisher {
     private static final String TOPIC = "file-conversion-results";
 
     private final OutboxEventRepository outboxRepository;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     @Scheduled(fixedDelay = 2000)
     @Transactional
@@ -31,8 +33,10 @@ public class OutboxPublisher {
         }
         for (OutboxEvent event : pending) {
             try {
+                Object jsonObject = objectMapper.readValue(event.getPayload(), Object.class);
+
                 kafkaTemplate
-                        .send(TOPIC, event.getRequestEventId(), event.getPayload())
+                        .send(TOPIC, event.getRequestEventId(), jsonObject)
                         .get(5, TimeUnit.SECONDS);
                 event.setStatus(OutboxStatus.SENT);
                 event.setPublishedAt(Instant.now());
