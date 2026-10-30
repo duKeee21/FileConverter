@@ -49,7 +49,7 @@ public class FileConversionService {
             FileType fileType = FileType.fromExtension(ext);
             List<String> outputPaths = new ArrayList<>();
 
-            if (fileType == FileType.ZIP) {
+            if (fileType.equals(FileType.ZIP)) {
                 try (InputStream in = minio.downloadFile(request.getFilePath());
                      ZipInputStream zis = new ZipInputStream(in)) {
 
@@ -66,7 +66,7 @@ public class FileConversionService {
                         byte[] pdfBytes;
                         try (InputStream entryStream = new ByteArrayInputStream(fileBytes)) {
                             pdfBytes = converter.convert(entryExt, entryStream);
-                        } catch (Exception e) {
+                        } catch (IllegalArgumentException e) {
                             log.warn("Пропущен файл '{}' из ZIP-архива: {}", entry.getName(), e.getMessage());
                             continue;
                         }

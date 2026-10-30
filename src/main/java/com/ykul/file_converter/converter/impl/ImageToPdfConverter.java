@@ -20,9 +20,8 @@ public class ImageToPdfConverter implements Converter {
 
     @Override
     public boolean supports(FileType fileType) {
-        return fileType == FileType.JPG || fileType == FileType.PNG;
+        return fileType.equals(FileType.JPG) || fileType.equals(FileType.PNG);
     }
-
 
     @Override
     public byte[] convert(InputStream inputStream) throws Exception {

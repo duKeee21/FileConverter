@@ -19,7 +19,7 @@ public class TxtToPdfConverter implements Converter {
     @Override
     public boolean supports(FileType fileType) {
 
-        return fileType == FileType.TXT;
+        return fileType.equals(FileType.TXT);
     }
 
     @Override
