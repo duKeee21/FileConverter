@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-inbox-table
+      author: serj
+      changes:
+        - createTable:
+            tableName: inbox
+            columns:
+              - column:
+                  name: event_id
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: processed_at
+                  type: TIMESTAMP WITH TIME ZONE
