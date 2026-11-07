@@ -35,3 +35,7 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin
   bucket-name: files
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
